@@ -1,0 +1,42 @@
+name: Packaging
+on: [push]
+jobs:
+  package:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    env:
+      LLVM_REPO: ${{ github.repository }}
+    steps:
+      - name: Install Ubuntu tools
+        if: startsWith(matrix.os, 'ubuntu')
+        run: sudo apt-get -y install ninja-build zip
+      - name: Install Windows tools
+        if: startsWith(matrix.os, 'windows')
+        run: choco install ninja zip
+      - name: Add Windows development tools to path
+        if: startsWith(matrix.os, 'windows')
+        uses: ilammy/msvc-dev-cmd@v1.5.0
+      - name: Install MacOS tools
+        if: startsWith(matrix.os, 'macos')
+        run: |
+          brew update
+          brew install ninja zip
+      - name: Check out source code
+        uses: actions/checkout@v2
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
+      - name: Configure with cmake
+        run: >-
+          cmake 
+          -G Ninja
+          -S . 
+          -B build
+      - name: Build with cmake
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          cd build
+          cmake --build . --verbose
