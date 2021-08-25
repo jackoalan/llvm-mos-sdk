@@ -34,4 +34,3 @@ worthwhile goal, we see such a project as *dependent on* this SDK, and not
 necessarily part of it.  It would be very reasonable to create a downstream
 set of cross-platform graphics or audio libraries, as cc65 has done, and 
 we'd be very happy to work alongside such a project.
-- 
