@@ -12,6 +12,7 @@ if(LLVM_MOS_COMPILE_TARGET_MOS)
         LANGUAGES C CXX ASM
         DESCRIPTION "Software development kit targeting common 8-bit computers with the MOS 65xx processor"
         HOMEPAGE_URL "https://github.com/llvm-mos/llvm-mos-sdk")
+    include(Platform/llvm-mos)
 else()
     project(llvm-mos-sdk-host
         LANGUAGES C CXX
