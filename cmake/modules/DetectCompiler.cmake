@@ -87,36 +87,46 @@ function(detect_compiler ret)
     )
 
     if(EXISTS ${_llvm_mos_c_compiler})
-        if (NOT EXISTS ${CMAKE_C_COMPILER})
-            # At this point CMAKE_C_COMPILER is not set and we have a good candidate.
-            message("-- Setting \$\{CMAKE_C_COMPILER\} to ${_llvm_mos_c_compiler}")
-            set(CMAKE_C_COMPILER ${_llvm_mos_c_compiler} 
-                CACHE FILEPATH "Path to the LLVM-MOS C compiler")
-        else()
-            message("A candidate LLVM-MOS C compiler was found, but you've already set \$\{CMAKE_C_COMPILER\}, so we are disregarding the one at ${_llvm_mos_c_compiler}")
+        if (NOT _CMAKE_TOOLCHAIN_LOCATION)
+            get_filename_component(_llvm_mos_tool_path 
+                ${_llvm_mos_c_compiler} DIRECTORY)
+            set(_CMAKE_TOOLCHAIN_LOCATION ${_llvm_mos_tool_path}/ CACHE FILEPATH
+                "LLVM-MOS toolchain location")
+        endif()
+        if (NOT CMAKE_C_COMPILER_EXTERNAL_TOOLCHAIN)
+            set(CMAKE_C_COMPILER_EXTERNAL_TOOLCHAIN ${_llvm_mos_c_compiler}
+                PARENT_SCOPE)
+        endif()
+        if (NOT CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN)
+            set(CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN ${_llvm_mos_c_compiler} 
+                PARENT_SCOPE)
+        endif()
+        if (NOT CMAKE_C_COMPILER)
+            cmake_policy(SET CMP0126 NEW)
+            set(CMAKE_C_COMPILER ${_llvm_mos_c_compiler} CACHE FILEPATH 
+                "LLVM-MOS C compiler path")
+        endif()
+        if (NOT CMAKE_CXX_COMPILER)
+            set(CMAKE_CXX_COMPILER ${_llvm_mos_c_compiler} CACHE FILEPATH 
+                "LLVM-MOS C++ compiler path")
         endif()
     endif()
 
     find_program(
-        _llvm_mos_cxx_compiler
+        _llvm_mos_linker
         NAMES
-            clang++
-            clang++.exe
+            ld.lld
+            ld.lld.exe 
         PATHS
             ${LLVM_MOS_BIN_DIR}
         NO_DEFAULT_PATH
     )
 
-    if(EXISTS ${_llvm_mos_cxx_compiler})
-        if (NOT EXISTS ${CMAKE_CXX_COMPILER})
-            # At this point CMAKE_C_COMPILER is not set and we have a good candidate.
-            message(
-                "-- Setting \$\{CMAKE_CXX_COMPILER\} to ${_llvm_mos_cxx_compiler}")
-            set(CMAKE_CXX_COMPILER ${_llvm_mos_cxx_compiler} 
-                CACHE FILEPATH "Path to the LLVM-MOS C++ compiler")
-        else()
-            message(
-                "A candidate LLVM-MOS C++ compiler was found, but you've already set \$\{CMAKE_CXX_COMPILER\}, so we are disregarding the one at ${_llvm_mos_c_compiler}")
+    if(EXISTS ${_llvm_mos_linker})
+        if(NOT CMAKE_LINKER)
+            set(CMAKE_LINKER ${_llvm_mos_linker} CACHE FILEPATH
+                "LLVM-MOS linker path")
+            message("-- CMAKE_LINKER set to ${_llvm_mos_linker}")
         endif()
     endif()
 

@@ -1,69 +1,36 @@
 # LLVM-MOS SDK
 
-A WIP SDK for developing with the llvm-mos compiler.
+## Overview
 
-## Project Status
+This is an SDK for developing software for the MOS 65xx family of
+microprocessors.  It allows you to develop code for some common
+computers of the 1980s, including the Commodore 64, Atari 800 XL,
+Apple IIe, and others.
 
-At present, only one configuration for the Commodore 64 is supported, but
-effort is being made to ensure that the SDK generalizes. Before the first
-official release, several other first-class targets will be created to
-provide examples to aid our users to port to other platforms.
+This SDK is designed to be used in conjunction with the 
+[llvm-mos](https://www.github.com/llvm-mos/llvm-mos) compiler.
 
-A hello world example application can be built for the C64, but much of the
-expected runtime is missing. As the compile approaches C99 compatibility,
-this will fill out to become a full frestanding C99 implementation.
+## Getting started
 
-## Build
+### Requirements
 
-Building the SDK first requires a working LLVM-MOS compiler. There isn't an
-official release yet, but if you're eager to try it out, you can compile it yourself.
+- An Intel-based 64-bit MacOS, Windows, or Ubuntu development machine with at
+least 32 GB of main memory
+- [CMake](https://cmake.org/download/) version 3.10 or later
+### Highly recommended
 
-### Install ninja
+- An Intel-based 64-bit MacOS, Windows, or Ubuntu development machine with at
+least 64 GB of main memory
+- [Ninja](https://www.ninja-build.org) version 1.10.2 or later
 
-For the steps below to work as-is, you'll need to install Ninja, the fast,
-parallel build tool favored by LLVM developers. Instructions for your
-platform will vary; see https://ninja-build.org/.
-
-Alternatively, you can set -G "Makefile" in each CMake command to use
-standard UNIX Makefiles, or you can substitute any other CMake-supported
-generator. Your compile times may take a hit, and LLVM is already very slow
-to build, so Ninja is highly recommended.
-
-### Build LLVM-MOS
-
-See https://github.com/llvm-mos for more information.
-
-```console
-$ cd
-$ git clone https://github.com/llvm-mos/llvm-mos.git
-$ cd llvm-mos
-$ mkdir build
-$ cd build
-$ cmake -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD="MOS" \
-        -DLLVM_TARGETS_TO_BUILD="" \
-        -DLLVM_ENABLE_PROJECTS="clang;lld" \
-        -G "Ninja" \
-        ../llvm
-$ ninja clang lld llvm-ar llvm-ranlib
-$ alias clang-mos=$HOME/llvm-mos/build/bin/clang
-```
-
-This will place binaries in a newly-created "bin" directory. An alias will
-allow easily using clang later.
 
 ### Build LLVM-MOS-SDK
-
-Once you have a working compiler, you can use it to build the SDK itself.
-You'll need to point the SDK at the compiler using -DLLVM_MOS, which requires
-an absolute path to the bin directory. If you compiled the compiler somewhere else, make sure to modify the snippet below with the correct path.
 
 ```console
 $ cd ../..
 $ git clone https://github.com/llvm-mos/llvm-mos-sdk.git
 $ cd llvm-mos-sdk
-$ mkdir build
-$ cd build
-$ cmake -DLLVM_MOS=$HOME/llvm-mos/build/bin -G "Ninja" ..
+$ cmake -G "Ninja" -B build
 $ ninja
 ```
 
