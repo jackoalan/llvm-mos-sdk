@@ -5,12 +5,12 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(LLVM_MOS_BOOTSTRAP_COMPILER On)
 
 include(BootstrapCompiler)
-include(DetectCompiler)
+# include(DetectCompiler)
 
-detect_compiler(_result)
-if (NOT _result)
-    message(FATAL_ERROR "need to find own compiler")
-endif()
+# detect_compiler(_result)
+# if (NOT _result)
+#    message(FATAL_ERROR "need to find own compiler")
+# endif()
 
 project(llvm-mos-sdk 
     LANGUAGES C CXX ASM
