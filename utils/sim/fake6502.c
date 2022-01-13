@@ -1103,6 +1103,77 @@ static const uint32_t ticktable_cmos[256] = {
 /* F */      2,    5,    5,    1,    4,    4,    6,    5,    2,    4,    4,    1,    4,    4,    7,    5   /* F */
 };
 
+// TODO: These are not emitted by LLVM, but may be used eventually.
+static void immd() { pc += 2; }
+static void ddds() { pc += 2; }
+static void cbne() { pc += 2; }
+static void rel2() { pc += 2; }
+static void up() { pc += 1; }
+
+static void (*addrtable_spc700[256])() = {
+/*        |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  A  |  B  |  C  |  D  |  E  |  F  |     */
+/* 0 */     imp,  imp,  zp,   zpr,  zp,  abso, imp,  indx, imm,  ddds, abso, zp,   abso,  imp, abso, imp,  /* 0 */
+/* 1 */     rel,  imp,  zp,   zpr,  zpx, absx, absy, indy, immd, imp,  zp,   zpx,  acc,   imp, abso, abso, /* 1 */
+/* 2 */     imp,  imp,  zp,   zpr,  zp,  abso, imp,  indx, imm,  ddds, abso, zp,   abso,  imp, rel2, rel,  /* 2 */
+/* 3 */     rel,  imp,  zp,   zpr,  zpx, absx, absy, indy, immd, imp,  zp,   zpx,  acc,   imp, zp,   abso, /* 3 */
+/* 4 */     imp,  imp,  zp,   zpr,  zp,  abso, imp,  indx, imm,  ddds, abso, zp,   abso,  imp, abso, up,   /* 4 */
+/* 5 */     rel,  imp,  zp,   zpr,  zpx, absx, absy, indy, immd, imp,  zp,   zpx,  acc,   imp, abso, abso, /* 5 */
+/* 6 */     imp,  imp,  zp,   zpr,  zp,  abso, imp,  indx, imm,  ddds, abso, zp,   abso,  imp, rel2, imp,  /* 6 */
+/* 7 */     rel,  imp,  zp,   zpr,  zpx, absx, absy, indy, immd, imp,  zp,   zpx,  acc,   imp, zp,   imp,  /* 7 */
+/* 8 */     imp,  imp,  zp,   zpr,  zp,  abso, imp,  indx, imm,  ddds, abso, zp,   abso,  imm, imp,  immd, /* 8 */
+/* 9 */     rel,  imp,  zp,   zpr,  zpx, absx, absy, indy, immd, imp,  zp,   zpx,  acc,   imp, imp,  acc,  /* 9 */
+/* A */     imp,  imp,  zp,   zpr,  zp,  abso, imp,  indx, imm,  ddds, abso, zp,   abso,  imm, imp,  imp,  /* A */
+/* B */     rel,  imp,  zp,   zpr,  zpx, absx, absy, indy, immd, imp,  zp,   zpx,  acc,   imp, imp,  imp,  /* B */
+/* C */     imp,  imp,  zp,   zpr,  zp,  abso, imp,  indx, imm,  abso, abso, zp,   abso,  imm, imp,  imp,  /* C */
+/* D */     rel,  imp,  zp,   zpr,  zpx, absx, absy, indy, zp,   zpy,  zp,   zpx,  imp,   imp, cbne, imp,  /* D */
+/* E */     imp,  imp,  zp,   zpr,  zp,  abso, imp,  indx, imm,  abso, abso, zp,   abso,  imp, imp,  imp,  /* E */
+/* F */     rel,  imp,  zp,   zpr,  zpx, absx, absy, indy, zp,   zpy,  ddds, zpx,  imp,   imp, rel2, imp,  /* F */
+};
+
+// TODO: These are not emitted by LLVM, but may be used eventually.
+static void clp() {}
+static void sep() {}
+
+static void (*optable_spc700[256])() = {
+/*        |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  A  |  B  |  C  |  D  |  E  |  F  |     */
+/* 0 */     nop,  nop,  nop,  nop,  ora,  ora,  nop,  ora,  ora,  nop,  nop,  asl,  asl,  php,  nop,  nop, /* 0 */
+/* 1 */     bpl,  nop,  nop,  nop,  ora,  ora,  ora,  ora,  nop,  nop,  nop,  asl,  asl,  dex,  cpx,  jmp, /* 1 */
+/* 2 */     clp,  nop,  nop,  nop,  and,  and,  nop,  and,  and,  nop,  nop,  rol,  rol,  pha,  nop,  bra, /* 2 */
+/* 3 */     bmi,  nop,  nop,  nop,  and,  and,  and,  and,  nop,  nop,  nop,  rol,  rol,  inx,  cpx,  jsr, /* 3 */
+/* 4 */     sep,  nop,  nop,  nop,  eor,  eor,  nop,  eor,  eor,  nop,  nop,  lsr,  lsr,  phx,  nop,  nop, /* 4 */
+/* 5 */     bvc,  nop,  nop,  nop,  eor,  eor,  eor,  eor,  nop,  nop,  nop,  lsr,  lsr,  tax,  cpy,  jmp, /* 5 */
+/* 6 */     clc,  nop,  nop,  nop,  cmp,  cmp,  nop,  cmp,  cmp,  nop,  nop,  ror,  ror,  phy,  nop,  rts, /* 6 */
+/* 7 */     bvs,  nop,  nop,  nop,  cmp,  cmp,  cmp,  cmp,  nop,  nop,  nop,  ror,  ror,  txa,  cpy,  rti, /* 7 */
+/* 8 */     sec,  nop,  nop,  nop,  adc,  adc,  nop,  adc,  adc,  nop,  nop,  dec,  dec,  ldy,  plp,  nop, /* 8 */
+/* 9 */     bcc,  nop,  nop,  nop,  adc,  adc,  adc,  adc,  nop,  nop,  nop,  dec,  dec,  tsx,  nop,  nop, /* 9 */
+/* A */     cli,  nop,  nop,  nop,  sbc,  sbc,  nop,  sbc,  sbc,  nop,  nop,  inc,  inc,  cpy,  pla,  nop, /* A */
+/* B */     bcs,  nop,  nop,  nop,  sbc,  sbc,  sbc,  sbc,  nop,  nop,  nop,  inc,  inc,  txs,  nop,  nop, /* B */
+/* C */     sei,  nop,  nop,  nop,  sta,  sta,  nop,  sta,  cpx,  stx,  nop,  sty,  sty,  ldx,  plx,  nop, /* C */
+/* D */     bne,  nop,  nop,  nop,  sta,  sta,  sta,  sta,  stx,  stx,  nop,  sty,  dey,  tya,  nop,  nop, /* D */
+/* E */     clv,  nop,  nop,  nop,  lda,  lda,  nop,  lda,  lda,  ldx,  nop,  ldy,  ldy,  nop,  ply,  nop, /* E */
+/* F */     beq,  nop,  nop,  nop,  lda,  lda,  lda,  lda,  ldx,  ldx,  nop,  ldy,  iny,  tay,  nop,  nop, /* F */
+};
+
+static const uint32_t ticktable_spc700[256] = {
+/*        |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  A  |  B  |  C  |  D  |  E  |  F  |     */
+/* 0 */      2,    8,    4,    5,    3,    4,    3,    6,    2,    6,    5,    4,    5,    4,    6,    8,  /* 0 */
+/* 1 */      2,    8,    4,    5,    4,    5,    5,    6,    5,    5,    6,    5,    2,    2,    4,    6,  /* 1 */
+/* 2 */      2,    8,    4,    5,    3,    4,    3,    6,    2,    6,    5,    4,    5,    4,    5,    4,  /* 2 */
+/* 3 */      2,    8,    4,    5,    4,    5,    5,    6,    5,    5,    6,    5,    2,    2,    3,    8,  /* 3 */
+/* 4 */      2,    8,    4,    5,    3,    4,    3,    6,    2,    6,    4,    4,    5,    4,    6,    6,  /* 4 */
+/* 5 */      2,    8,    4,    5,    4,    5,    5,    6,    5,    5,    4,    5,    2,    2,    4,    3,  /* 5 */
+/* 6 */      2,    8,    4,    5,    3,    4,    3,    6,    2,    6,    4,    4,    5,    4,    5,    5,  /* 6 */
+/* 7 */      2,    8,    4,    5,    4,    5,    5,    6,    5,    5,    5,    5,    2,    2,    3,    6,  /* 7 */
+/* 8 */      2,    8,    4,    5,    3,    4,    3,    6,    2,    6,    5,    4,    5,    2,    4,    5,  /* 8 */
+/* 9 */      2,    8,    4,    5,    4,    5,    5,    6,    5,    5,    5,    5,    2,    2,    12,   5,  /* 9 */
+/* A */      3,    8,    4,    5,    3,    4,    3,    6,    2,    6,    4,    4,    5,    2,    4,    4,  /* A */
+/* B */      2,    8,    4,    5,    4,    5,    5,    6,    5,    5,    5,    5,    2,    2,    3,    4,  /* B */
+/* C */      3,    8,    4,    5,    3,    5,    4,    7,    2,    5,    6,    4,    5,    2,    4,    9,  /* C */
+/* D */      2,    8,    4,    5,    4,    6,    6,    7,    4,    5,    5,    5,    2,    2,    6,    3,  /* D */
+/* E */      2,    8,    4,    5,    3,    4,    3,    6,    2,    4,    5,    3,    4,    3,    4,    3,  /* E */
+/* F */      2,    8,    4,    5,    4,    5,    5,    6,    3,    4,    5,    4,    2,    2,    5,    3   /* F */
+};
+
 void nmi6502() {
     push16(pc);
     push8(status);
@@ -1142,8 +1213,12 @@ void exec6502(uint32_t tickcount) {
 
 }
 
-void reset6502(uint8_t cmos) {
-    if (cmos != 0) {
+void reset6502(uint8_t cmos, uint8_t spc700) {
+    if (spc700 != 0) {
+        addrtable = addrtable_spc700;
+        optable = optable_spc700;
+        ticktable = ticktable_spc700;
+    } else if (cmos != 0) {
         addrtable = addrtable_cmos;
         optable = optable_cmos;
         ticktable = ticktable_cmos;

@@ -34,7 +34,7 @@ static const char usage[] =
     "\t--trace: Print each instruction address to stderr.\n"
     "\t--cmos: Enable 65C02 emulation.\n";
 
-void reset6502(uint8_t cmos);
+void reset6502(uint8_t cmos, uint8_t spc700);
 void step6502();
 extern uint32_t clockticks6502;
 extern uint16_t pc;
@@ -45,6 +45,7 @@ uint32_t clock_start = 0;
 bool shouldPrintCycles = false;
 bool shouldTrace = false;
 bool cmos = false;
+bool spc700 = false;
 
 int8_t read6502(uint16_t address) {
   if (address == 0xfff0) {
@@ -89,6 +90,8 @@ bool parseFlag(int *argc, const char ***argv) {
     shouldTrace = true;
   } else if (!strcmp(flag, "--cmos")) {
     cmos = true;
+  } else if (!strcmp(flag, "--spc700")) {
+    spc700 = true;
   } else
     return false;
 
@@ -160,7 +163,7 @@ int main(int argc, const char *argv[]) {
     }
   }
 
-  reset6502(cmos);
+  reset6502(cmos, spc700);
   for (;;) {
     if (shouldTrace)
       fprintf(stderr, "%04x a:%02x x:%02x y:%02x s: %02x st:%02x\n", pc, a, x, y, sp, status);
