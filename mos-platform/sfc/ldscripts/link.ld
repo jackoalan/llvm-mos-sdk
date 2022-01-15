@@ -127,7 +127,7 @@ SECTIONS {
 
 /* Provide 128 imaginary registers */
 PROVIDE(__rc0 = 0x0000);
-INCLUDE imag_reg/128.ld
+INCLUDE imag_reg/127.ld
 ASSERT(__rc0 == 0x0000, "Inconsistent zero page map.")
 ASSERT(__rc127 == 0x007f, "Inconsistent zero page map.")
 

@@ -18,10 +18,9 @@ foreach(hex IN LISTS SEPARATED_HEX)
 endforeach()
 
 set(output_c "#include <stdint.h>
-uint8_t ${c_name}_data[] = {
+const uint8_t ${c_name}_data[] = {
   ${output_c}
 }\;
-unsigned ${c_name}_size = sizeof(${c_name}_data)\;
 ")
 
 file(WRITE ${OUTPUT_FILE} ${output_c})
