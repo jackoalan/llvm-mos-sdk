@@ -48,6 +48,7 @@ SECTIONS {
         __start_bss = .;
         *(.bss .bss.*)
         __end_bss = .;
+        __heap_start = .;
     } >ram
 
     .sfc.header 0xFFB0 : {
