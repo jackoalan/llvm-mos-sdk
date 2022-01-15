@@ -135,6 +135,7 @@ _start:
     BNE .L_Loop09
 
     ;**** clear WRAM ********
+    ;TODO This can just focus on .bss
 
     STZ $2181		      ;Set WRAM address to $000000
     STZ $2182
