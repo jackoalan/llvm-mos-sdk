@@ -21,6 +21,7 @@ set(output_c "#include <stdint.h>
 const uint8_t ${c_name}_data[] = {
   ${output_c}
 }\;
+const uint16_t ${c_name}_size = sizeof(${c_name}_data)\;
 ")
 
 file(WRITE ${OUTPUT_FILE} ${output_c})

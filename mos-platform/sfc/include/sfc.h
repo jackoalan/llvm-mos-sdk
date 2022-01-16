@@ -1,11 +1,12 @@
 #pragma once
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef unsigned char u8;
-typedef unsigned short u16;
+typedef uint8_t u8;
+typedef uint16_t u16;
 
 extern volatile struct __attribute__((packed)) {
   u8 INIDISP;
