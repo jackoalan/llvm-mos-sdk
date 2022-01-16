@@ -41,7 +41,7 @@ void boot_spc(const u8 (&data)[N], u16 dest, u16 entry) {
 
 int main() {
   // Load first palette entry with cyan
-  __sfc_regs.CGADD = 0;
+  __sfc_regs.CGADDR = 0;
   __sfc_regs.CGDATA = 0xe0;
   __sfc_regs.CGDATA = 0x7f;
 
@@ -50,7 +50,7 @@ int main() {
 
   boot_spc(spc_prg_bin_data, spc_prg_bin_size, 0x0200, 0x0200);
 
-  __sfc_regs.CGADD = 0;
+  __sfc_regs.CGADDR = 0;
   __sfc_regs.CGDATA = 0x00;
   __sfc_regs.CGDATA = 0x7f;
 

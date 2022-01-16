@@ -14,7 +14,7 @@ __attribute__((section(".zp")))
 extern volatile struct {
   u8 UNDOCUMENTED;
   u8 CTRL;
-  u8 DSPADD;
+  u8 DSPADDR;
   u8 DSPDATA;
   u8 APUIO0;
   u8 APUIO1;
@@ -85,7 +85,7 @@ typedef union dsp_regs {
 } dsp_regs_t;
 
 inline u8 __spc_dsp_read_reg(u8 addr) {
-  __spc_regs.DSPADD = addr;
+  __spc_regs.DSPADDR = addr;
   return __spc_regs.DSPDATA;
 }
 
@@ -93,7 +93,7 @@ inline u8 __spc_dsp_read_reg(u8 addr) {
   __spc_dsp_read_reg(__builtin_offsetof(dsp_regs_t, reg))
 
 inline void __spc_dsp_write_reg(u8 addr, u8 val) {
-  __spc_regs.DSPADD = addr;
+  __spc_regs.DSPADDR = addr;
   __spc_regs.DSPDATA = val;
 }
 

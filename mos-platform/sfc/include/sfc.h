@@ -11,7 +11,7 @@ typedef uint16_t u16;
 extern volatile struct __attribute__((packed)) {
   u8 INIDISP;
   u8 OBSEL;
-  u16 OAMADD;
+  u16 OAMADDR;
   u8 OAMDATA;
   u8 BGMODE;
   u8 MOSAIC;
@@ -30,7 +30,7 @@ extern volatile struct __attribute__((packed)) {
   u8 BG4HOFS;
   u8 BG4VOFS;
   u8 VMAIN;
-  u16 VMADD;
+  u16 VMADDR;
   u16 VMDATA;
   u8 M7SEL;
   u8 M7A;
@@ -39,7 +39,7 @@ extern volatile struct __attribute__((packed)) {
   u8 M7D;
   u8 M7X;
   u8 M7Y;
-  u8 CGADD;
+  u8 CGADDR;
   u8 CGDATA;
   u8 W12SEL;
   u8 W34SEL;
@@ -74,9 +74,9 @@ extern volatile struct __attribute__((packed)) {
   u8 APUIO2;
   u8 APUIO3;
   u8 WMDATA;
-  u8 WMADDL;
-  u8 WMADDM;
-  u8 WMADDH;
+  u8 WMADDRL;
+  u8 WMADDRM;
+  u8 WMADDRH;
 } __sfc_regs;
 
 extern volatile struct __attribute__((packed)) {
