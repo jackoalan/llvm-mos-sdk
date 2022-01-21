@@ -39,13 +39,13 @@ void step6502();
 extern uint32_t clockticks6502;
 extern uint16_t pc;
 extern uint8_t a, x, y, sp, status;
+extern uint8_t cmos;
+extern uint8_t spc700;
 
 uint8_t memory[65536];
 uint32_t clock_start = 0;
 bool shouldPrintCycles = false;
 bool shouldTrace = false;
-bool cmos = false;
-bool spc700 = false;
 
 int8_t read6502(uint16_t address) {
   if (address == 0xfff0) {
@@ -89,9 +89,9 @@ bool parseFlag(int *argc, const char ***argv) {
   } else if (!strcmp(flag, "--trace")) {
     shouldTrace = true;
   } else if (!strcmp(flag, "--cmos")) {
-    cmos = true;
+    cmos = 1;
   } else if (!strcmp(flag, "--spc700")) {
-    spc700 = true;
+    spc700 = 1;
   } else
     return false;
 

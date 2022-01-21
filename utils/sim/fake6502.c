@@ -79,10 +79,8 @@ limitations under the License.
  *****************************************************
  * Useful functions in this emulator:                *
  *                                                   *
- * void reset6502(uint8_t cmos)                      *
+ * void reset6502()                                  *
  *   - Call this once before you begin execution.    *
- *   - 65C02 emulation is enabled by setting the     *
- *     cmos flag.                                    *
  *                                                   *
  * void exec6502(uint32_t tickcount)                 *
  *   - Execute 6502 code up to the next specified    *
@@ -189,6 +187,10 @@ uint32_t instructions = 0; //keep track of total instructions executed
 uint32_t clockticks6502 = 0, clockgoal6502 = 0;
 uint16_t oldpc, ea, reladdr, value, result;
 uint8_t opcode, oldstatus;
+
+//variant cpu enable flags
+uint8_t cmos = 0;
+uint8_t spc700 = 0;
 
 //externally supplied functions
 extern uint8_t read6502(uint16_t address);
@@ -685,8 +687,10 @@ static void phy() {
 static void pla() {
     a = pull8();
 
-    zerocalc(a);
-    signcalc(a);
+    if (spc700 == 0) {
+        zerocalc(a);
+        signcalc(a);
+    }
 }
 
 static void plp() {
@@ -696,15 +700,19 @@ static void plp() {
 static void plx() {
     x = pull8();
 
-    zerocalc(x);
-    signcalc(x);
+    if (spc700 == 0) {
+        zerocalc(x);
+        signcalc(x);
+    }
 }
 
 static void ply() {
     y = pull8();
 
-    zerocalc(y);
-    signcalc(y);
+    if (spc700 == 0) {
+        zerocalc(y);
+        signcalc(y);
+    }
 }
 
 static void rol() {
@@ -1110,10 +1118,18 @@ static void cbne() { pc += 2; }
 static void rel2() { pc += 2; }
 static void up() { pc += 1; }
 
+static void injx() {
+  uint16_t eahelp;
+  eahelp = (uint16_t)read6502(pc) | (uint16_t)((uint16_t)read6502(pc+1) << 8);
+  eahelp += (uint16_t)x;
+  ea = (uint16_t)read6502(eahelp) | (uint16_t)((uint16_t)read6502(eahelp + 1) << 8);
+  pc += 2;
+}
+
 static void (*addrtable_spc700[256])() = {
 /*        |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  A  |  B  |  C  |  D  |  E  |  F  |     */
 /* 0 */     imp,  imp,  zp,   zpr,  zp,  abso, imp,  indx, imm,  ddds, abso, zp,   abso,  imp, abso, imp,  /* 0 */
-/* 1 */     rel,  imp,  zp,   zpr,  zpx, absx, absy, indy, immd, imp,  zp,   zpx,  acc,   imp, abso, abso, /* 1 */
+/* 1 */     rel,  imp,  zp,   zpr,  zpx, absx, absy, indy, immd, imp,  zp,   zpx,  acc,   imp, abso, injx, /* 1 */
 /* 2 */     imp,  imp,  zp,   zpr,  zp,  abso, imp,  indx, imm,  ddds, abso, zp,   abso,  imp, rel2, rel,  /* 2 */
 /* 3 */     rel,  imp,  zp,   zpr,  zpx, absx, absy, indy, immd, imp,  zp,   zpx,  acc,   imp, zp,   abso, /* 3 */
 /* 4 */     imp,  imp,  zp,   zpr,  zp,  abso, imp,  indx, imm,  ddds, abso, zp,   abso,  imp, abso, up,   /* 4 */
@@ -1213,7 +1229,7 @@ void exec6502(uint32_t tickcount) {
 
 }
 
-void reset6502(uint8_t cmos, uint8_t spc700) {
+void reset6502() {
     if (spc700 != 0) {
         addrtable = addrtable_spc700;
         optable = optable_spc700;

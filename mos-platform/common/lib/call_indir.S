@@ -5,9 +5,4 @@
 ; and return values are trivially forwarded (RS9 can never contain arguments).
 .global __call_indir
 __call_indir:
-#if __mosspc700__
-  ldx #0
-  jmp (__rc18,x)
-#else
   jmp (__rc18)
-#endif
