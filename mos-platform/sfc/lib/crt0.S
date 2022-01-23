@@ -187,7 +187,7 @@ _start:
     CLI			;enable interrupts again
 
     __init_stack
-    JSR main	;App entry point
+    JSR __main	;App entry point
 
 .Lforever:
     JMP .Lforever

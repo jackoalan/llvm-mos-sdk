@@ -59,10 +59,14 @@ SECTIONS {
         __data_dma_length = __end_data_ram - __start_data_ram;
     } >ram
 
-    .bss : {
+    .bss (NOLOAD) : {
         __start_bss = .;
-        *(.bss .bss.*)
+        *(.bss .bss.* COMMON)
         __end_bss = .;
+    } >ram
+
+    .noinit (NOLOAD) : {
+        *(.noinit .noinit.*)
         __heap_start = .;
     } >ram
 

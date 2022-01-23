@@ -44,10 +44,14 @@ SECTIONS {
         __fini_array_end = .;
     } >ram
 
-    .bss : {
+    .bss (NOLOAD) : {
         __start_bss = .;
-        *(.bss .bss.*)
+        *(.bss .bss.* COMMON)
         __end_bss = .;
+    } >ram
+
+    .noinit (NOLOAD) : {
+        *(.noinit .noinit.*)
         __heap_start = .;
     } >ram
 }
